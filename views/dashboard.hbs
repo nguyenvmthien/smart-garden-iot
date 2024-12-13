@@ -1,0 +1,176 @@
+{{> sidebar}}
+{{> user}}
+<!--Main container-->
+<div class="main flex flex-col gap-4 ml-24 mr-4 pt-20">
+    <div class="data-boxes flex justify-between">
+        <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
+            <p class="text-xl">Nhiệt độ</p>
+            <p class="font-bold text-4xl text-center">30°C</p>
+        </div>
+        <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
+            <p class="text-xl">Độ ẩm</p>
+            <p class="font-bold text-4xl text-center">60%</p>
+        </div>
+        <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
+            <p class="text-xl">Ánh sáng</p>
+            <p class="font-bold text-4xl text-center">3000 lux</p>
+        </div>
+        <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
+            <p class="text-xl">Mực nước</p>
+            <p class="font-bold text-4xl text-center">0.5 m</p>
+        </div>
+    </div>
+
+    <div class="charts grid grid-cols-2 gap-4">
+        <div class="flex flex-col bg-[#F1FFF5] rounded-xl p-2">
+            <div>
+                <i class="fa-solid fa-chart-line px-1" style="color: #63E6BE;"></i>
+                <span class="font-bold">Nhiệt độ tuần này</span>
+            </div>
+            <canvas class="" id="tempChart"></canvas>
+        </div>
+        <div class="flex flex-col bg-[#F1FFF5] rounded-xl p-2">
+            <div>
+                <i class="fa-solid fa-chart-line px-1" style="color: #63E6BE;"></i>
+                <span class="font-bold">Độ ẩm tuần này</span>
+            </div>
+            <canvas class="" id="humidChart"></canvas>
+        </div>
+        <div class="flex flex-col bg-[#F1FFF5] rounded-xl p-2">
+            <div>
+                <i class="fa-solid fa-chart-line px-1" style="color: #63E6BE;"></i>
+                <span class="font-bold">Ánh sáng tuần này</span>
+            </div>
+            <canvas class="" id="lightChart"></canvas>
+        </div>
+        <div class="flex flex-col bg-[#F1FFF5] rounded-xl p-2">
+            <div>
+                <i class="fa-solid fa-chart-line px-1" style="color: #63E6BE;"></i>
+                <span class="font-bold">Mực nước tuần này</span>
+            </div>
+            <canvas class="" id="waterChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    const tempCtx = document.getElementById('tempChart').getContext('2d');
+    const tempChart = new Chart(tempCtx, {
+        type: 'line', // Loại biểu đồ
+        data: {
+            labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'], // Nhãn trục X
+            datasets: [{
+                data: [20, 25, 60, 80, 40, 50, 30], // Dữ liệu nhiệt độ
+                borderColor: '#1F78B4', // Màu đường
+                borderWidth: 2, // Độ dày đường
+                tension: 0.4 // Độ cong của đường
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const humidCtx = document.getElementById('humidChart').getContext('2d');
+    const humidChart = new Chart(humidCtx, {
+        type: 'line', // Loại biểu đồ
+        data: {
+            labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'], // Nhãn trục X
+            datasets: [{
+                data: [20, 25, 60, 80, 40, 50, 30], // Dữ liệu nhiệt độ
+                borderColor: '#1F78B4', // Màu đường
+                borderWidth: 2, // Độ dày đường
+                tension: 0.4 // Độ cong của đường
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const lightCtx = document.getElementById('lightChart').getContext('2d');
+    const lightChart = new Chart(lightCtx, {
+        type: 'line', // Loại biểu đồ
+        data: {
+            labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'], // Nhãn trục X
+            datasets: [{
+                data: [20, 25, 60, 80, 40, 50, 30], // Dữ liệu nhiệt độ
+                borderColor: '#1F78B4', // Màu đường
+                borderWidth: 2, // Độ dày đường
+                tension: 0.4 // Độ cong của đường
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const waterCtx = document.getElementById('waterChart').getContext('2d');
+    const waterChart = new Chart(waterCtx, {
+        type: 'line', // Loại biểu đồ
+        data: {
+            labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'], // Nhãn trục X
+            datasets: [{
+                data: [20, 25, 60, 80, 40, 50, 30], // Dữ liệu nhiệt độ
+                borderColor: '#1F78B4', // Màu đường
+                borderWidth: 2, // Độ dày đường
+                tension: 0.4 // Độ cong của đường
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>

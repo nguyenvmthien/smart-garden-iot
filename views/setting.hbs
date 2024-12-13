@@ -1,0 +1,102 @@
+{{> sidebar}}
+{{> user}}
+<!--Main container-->
+<div class="main flex flex-col gap-8 ml-24 mr-4 pt-20">
+    <form id="form1" class="bg-[#F1FFF5] rounded-xl p-4 pb-16 relative">
+        <h1 class="font-bold">Thiết lập tự xử lí</h1>
+        <div class="grid grid-cols-3 text-center gap-4">
+            <p></p>
+            <p>Ngưỡng dưới</p>
+            <p>Ngưỡng trên</p>
+            <p>Mức nhiệt độ tự xử lí (°C)</p>
+            <div class="flex justify-center items-center">
+                <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10" name="minTemp">
+            </div>
+            <div class="flex justify-center items-center">
+                <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10" name="maxTemp">
+            </div>
+            <p>Mức độ ẩm tự xử lí (%)</p>
+            <div class="flex justify-center items-center">
+                <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10" name="minHumid">
+            </div>
+            <div class="flex justify-center items-center">
+                <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10" name="maxHumid">
+            </div>
+            <p>Mức ánh sáng tự xử lí (lux)</p>
+            <div class="flex justify-center items-center">
+                <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
+                    name="minBrightness">
+            </div>
+            <div class="flex justify-center items-center">
+                <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
+                    name="maxBrightness">
+            </div>
+            <p>Mực nước tự xử lí (m)</p>
+            <div class="flex justify-center items-center">
+                <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10" name="minHeight">
+            </div>
+            <div class="flex justify-center items-center">
+                <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10" name="maxHeight">
+            </div>
+        </div>
+        <button class="bg-[#05751B] rounded-full px-8 py-1 text-white font-medium absolute bottom-4 right-4">Thiết
+            lập</button>
+    </form>
+
+    <form id="form2" class="bg-[#F1FFF5] rounded-xl p-4 pb-16 relative">
+        <h1 class="font-bold">Thiết lập thiết bị hoạt động</h1>
+        <div class="flex flex-col gap-4 p-2">
+            <div class="flex">
+                <div class="flex gap-4 basis-1/2 justify-center items-center">
+                    <p class="basis-1/2 text-center">Thời gian mỗi lần bật máy sưởi</p>
+                    <div class="basis-1/2 flex justify-center items-center gap-2">
+                        <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
+                            name="heaterDuration">
+                        <p>(phút)</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 basis-1/2 justify-center items-center">
+                    <p class="basis-1/2 text-center">Thời điểm tưới nước mỗi ngày</p>
+                    <div class="basis-1/2 flex justify-center items-center gap-2 px-3">
+                        <input type="time" class="rounded-full bg-[#c1e6c4] px-2 text-center w-full"
+                            name="wateringTime">
+                    </div>
+                </div>
+            </div>
+            <div class="flex">
+                <div class="flex gap-4 basis-1/2 justify-center items-center">
+                    <p class="basis-1/2 text-center">Thời gian mỗi lần tưới nước</p>
+                    <div class="basis-1/2 flex justify-center items-center gap-2">
+                        <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
+                            name="wateringDuration">
+                        <p>(phút)</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 basis-1/2 justify-center items-center">
+                    <p class="basis-1/2 text-center">Thời gian mỗi lần bật quạt</p>
+                    <div class="basis-1/2 flex justify-center items-center gap-2">
+                        <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
+                            name="fanDuration">
+                        <p>(phút)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex">
+                <div class="flex gap-4 basis-1/2 justify-center items-center">
+                    <p class="basis-1/2 text-center">Chiều cao thùng chứa nước</p>
+                    <div class="basis-1/2 flex justify-center items-center gap-6">
+                        <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
+                            name="tankHeight">
+                        <p>(m)</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 basis-1/2 justify-center items-center">
+
+                </div>
+            </div>
+        </div>
+        <button class="bg-[#05751B] rounded-full px-8 py-1 text-white font-medium absolute bottom-4 right-4">Thiết
+            lập</button>
+    </form>
+
+</div>
