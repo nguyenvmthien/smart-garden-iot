@@ -1,23 +1,24 @@
 {{> sidebar}}
 {{> user}}
 <!--Main container-->
+<div id="messages" class="ml-20"></div>
 <div class="main flex flex-col gap-4 ml-24 mr-4 pt-20">
     <div class="data-boxes flex justify-between">
         <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
             <p class="text-xl">Nhiệt độ</p>
-            <p class="font-bold text-4xl text-center">30°C</p>
+            <p id="temperature" class="font-bold text-4xl text-center"></p>
         </div>
         <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
             <p class="text-xl">Độ ẩm</p>
-            <p class="font-bold text-4xl text-center">60%</p>
+            <p id="humidity" class="font-bold text-4xl text-center"></p>
         </div>
         <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
             <p class="text-xl">Ánh sáng</p>
-            <p class="font-bold text-4xl text-center">3000 lux</p>
+            <p id="brightness" class="font-bold text-4xl text-center"></p>
         </div>
         <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
             <p class="text-xl">Mực nước</p>
-            <p class="font-bold text-4xl text-center">0.5 m</p>
+            <p id="waterLevel" class="font-bold text-4xl text-center"></p>
         </div>
     </div>
 
@@ -172,5 +173,54 @@
                 }
             }
         }
+    });
+
+    // Kết nối đến HiveMQ WebSocket broker
+    const client = mqtt.connect('wss://66e7cd73955d41119db073a43925b11b.s1.eu.hivemq.cloud:8884/mqtt', {
+        username: 'smart-garden-web',
+        password: 'Username2',
+        clientId: 'smart-garden-web-client',
+    });
+
+    // Khi kết nối thành công
+    client.on('connect', () => {
+        console.log('Connected to HiveMQ');
+        client.subscribe('smart-garden/#', (err) => {
+            if (err) {
+                console.error('Failed to subscribe:', err);
+            } else {
+                console.log('Subscribed to topic: smart-garden/#');
+            }
+        });
+    });
+
+    // Khi nhận được tin nhắn từ broker
+    client.on('message', (topic, message) => {
+        console.log("Received message on topic:", topic);
+        if (topic === 'smart-garden/temperature') {
+            const temperature = message.toString(); // Chuyển đổi message sang string
+            console.log("Temperature:", temperature); // Xem giá trị nhận được
+            document.getElementById('temperature').innerText = temperature + "°C"; // Hiển thị nhiệt độ
+        }
+        if (topic === 'smart-garden/humidity') {
+            const humidity = message.toString(); // Chuyển đổi message sang string
+            console.log("Humidity:", humidity); // Xem giá trị nhận được
+            document.getElementById('humidity').innerText = humidity + "%"; // Hiển thị độ ẩm
+        }
+        if (topic === 'smart-garden/brightness') {
+            const brightness = message.toString(); // Chuyển đổi message sang string
+            console.log("Brightness:", brightness); // Xem giá trị nhận được
+            document.getElementById('brightness').innerText = brightness + " lux"; // Hiển thị ánh sáng
+        }
+        if (topic === 'smart-garden/water-level') {
+            const waterLevel = message.toString(); // Chuyển đổi message sang string
+            console.log("Water Level:", waterLevel); // Xem giá trị nhận được
+            document.getElementById('waterLevel').innerText = waterLevel + " m"; // Hiển thị mực nước
+        }
+    });
+
+    // Khi xảy ra lỗi
+    client.on('error', (error) => {
+        console.error('MQTT Error:', error);
     });
 </script>

@@ -4,7 +4,7 @@ background-size: cover; background-position: center;">
     <div class="w-full flex flex-col justify-center items-center">
         <h1 class="font-bold text-3xl text-[#001c27] p-4">Đăng ký</h1>
 
-        <form class="flex flex-col w-1/4 min-w-[300px] gap-4 bg-[#d9f5a4] bg-opacity-90 p-4 rounded-2xl relative" method="POST" action="">
+        <form class="flex flex-col w-1/4 min-w-[300px] gap-4 bg-[#d9f5a4] bg-opacity-90 p-4 rounded-2xl relative" method="POST" action="/signup">
             <input type="email" class="form-control rounded-2xl p-3 outline-none bg-[#f5f5f5]" name="email"
                 placeholder="Email" required>
 
@@ -14,13 +14,12 @@ background-size: cover; background-position: center;">
             <input type="password" class="form-control rounded-2xl p-3 outline-none bg-[#f5f5f5]" name="password"
                 placeholder="Mật khẩu" required>
 
-            <button id="login-button" type="button"
-                class="bg-[#033a35] text-white text-opacity-40 font-medium rounded-2xl p-4 w-full"
-                onclick="window.location.href='./index.html'">
+            <button id="signup-button" type="submit"
+                class="bg-[#033a35] text-white text-opacity-40 font-medium rounded-2xl p-4 w-full">
                 Đăng ký
             </button>
 
-            <p class="text-center font-medium">Đã có tài khoản? <a class="hover:underline" href="./login.html">Đăng nhập tại đây</a></p>
+            <p class="text-center font-medium">Đã có tài khoản? <a class="hover:underline" href="/login">Đăng nhập tại đây</a></p>
         </form>
     </div>
 

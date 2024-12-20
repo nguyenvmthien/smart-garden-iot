@@ -1,3 +1,4 @@
+const { json } = require('express');
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 
@@ -8,14 +9,14 @@ const UserModel = {
         try {
             const result = await db.query(query, [username]);
             if (result.rows.length === 0) {
-                throw new Error('User not found');
+                return { error: 'User not found!' };
             }
 
             const user = result.rows[0];
             // So sánh mật khẩu
             const isPasswordMatch = await bcrypt.compare(password, user.password);
             if (!isPasswordMatch) {
-                throw new Error('Invalid credentials');
+                return { error: 'Wrong password!' };
             }
 
             return user; // Trả về thông tin user nếu đăng nhập thành công
@@ -33,7 +34,12 @@ const UserModel = {
     `;
         try {
             const result = await db.query(query, [username, hashedPassword, email]);
-            return result.rows[0]; // Trả về thông tin người dùng
+            if (result.rows.length === 0) {
+                throw new Error('Cannot create user');
+            }
+            else {
+                return result.rows[0];
+            }
         } catch (err) {
             throw new Error('Error registering user: ' + err.message);
         }
