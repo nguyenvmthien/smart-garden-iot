@@ -1,39 +1,19 @@
-const db = require('./config/db');
+const express = require('express');
+const app = express();
+const port = 3000;
+const route = require('./routes');
+const Hbs = require('express-handlebars');
+const path = require('path');
 
-(async () => {
-    try {
-        const result = await db.query(`
-        SELECT *
-        FROM sensor_data;
-      `);
-        console.log('Existing tables:', result.rows);
-    } catch (err) {
-        console.error('Error fetching tables:', err.message);
-    } finally {
-        db.end(); // Close the database connection
-    }
-})();
+app.use(express.static(path.join(__dirname, 'public')));
 
-// SELECT table_name
-// FROM information_schema.tables
-// WHERE table_schema = 'public';
+app.engine('hbs', Hbs.engine({ extname: 'hbs' }));
+app.set('view engine', 'hbs');
 
-// const express = require('express');
-// const app = express();
-// const port = 3000;
-// const route = require('./routes');
-// const Hbs = require('express-handlebars');
-// const path = require('path');
+app.set('views', path.join(__dirname, 'views'));
 
-// app.use(express.static(path.join(__dirname, 'public')));
+route(app);
 
-// app.engine('hbs', Hbs.engine({ extname: 'hbs' }));
-// app.set('view engine', 'hbs');
-
-// app.set('views', path.join(__dirname, 'views'));
-
-// route(app);
-
-// app.listen(port, () => {
-//     console.log(`Example app listening at http://localhost:${port}`);
-// });
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
+});
