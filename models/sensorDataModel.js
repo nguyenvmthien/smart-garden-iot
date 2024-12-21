@@ -13,10 +13,10 @@ const SensorDataModel = {
   },
 
   // Lấy dữ liệu cảm biến theo ID người dùng
-  getSensorDataByUserId: async (userId) => {
+  getSensorDataByusername: async (username) => {
     const query = 'SELECT * FROM sensor_data WHERE user_id = $1';
     try {
-      const result = await db.query(query, [userId]);
+      const result = await db.query(query, [username]);
       return result.rows;
     } catch (err) {
       throw new Error('Error fetching sensor data for user: ' + err.message);
@@ -24,13 +24,13 @@ const SensorDataModel = {
   },
 
   // Lấy dữ liệu cảm biến theo loại
-  getSensorDataByType: async (userId, sensorType) => {
+  getSensorDataByType: async (username, sensorType) => {
     const query = `
       SELECT * FROM sensor_data 
       WHERE user_id = $1 AND sensor_type = $2
     `;
     try {
-      const result = await db.query(query, [userId, sensorType]);
+      const result = await db.query(query, [username, sensorType]);
       return result.rows;
     } catch (err) {
       throw new Error('Error fetching sensor data by type: ' + err.message);
@@ -38,13 +38,13 @@ const SensorDataModel = {
   },
 
   // Thêm dữ liệu cảm biến mới
-  createSensorData: async (userId, sensorType, sensorValue) => {
+  createSensorData: async (username, sensorType, sensorValue) => {
     const query = `
-      INSERT INTO sensor_data (user_id, sensor_type, sensor_value)
+      INSERT INTO sensor_data (username, sensor_type, sensor_value)
       VALUES ($1, $2, $3) RETURNING *;
     `;
     try {
-      const result = await db.query(query, [userId, sensorType, sensorValue]);
+      const result = await db.query(query, [username, sensorType, sensorValue]);
       return result.rows[0];
     } catch (err) {
       throw new Error('Error adding sensor data: ' + err.message);

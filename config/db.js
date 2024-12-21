@@ -12,8 +12,8 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }, // Yêu cầu SSL trên Clever Cloud
 });
 
-pool.on('connect', () => {
-  console.log('Kết nối thành công đến PostgreSQL!');
-});
+// pool.on('connect', () => {
+//   console.log('Kết nối thành công đến PostgreSQL!');
+// });
 
 module.exports = pool;

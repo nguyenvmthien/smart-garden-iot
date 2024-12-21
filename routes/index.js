@@ -15,6 +15,10 @@ function route(app) {
     app.get('/chatbot', chatbotController.renderChatbot);
     app.get('/login', userController.renderLogin);
     app.get('/signup', userController.renderSignup);
+    app.post('/login', userController.login);
+    app.post('/signup', userController.signup);
+    app.get('/logout', userController.logout);
+    app.post('/update-sensors', dashboardController.updateSensors);
 }
 
 module.exports = route;

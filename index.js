@@ -12,6 +12,13 @@ app.set('view engine', 'hbs');
 
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Cau hinh doc ghi cookie
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
 route(app);
 
 app.listen(port, () => {

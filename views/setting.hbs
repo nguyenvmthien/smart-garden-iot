@@ -1,8 +1,8 @@
 {{> sidebar}}
 {{> user}}
 <!--Main container-->
-<div class="main flex flex-col gap-8 ml-24 mr-4 pt-20">
-    <form id="form1" class="bg-[#F1FFF5] rounded-xl p-4 pb-16 relative">
+<form id="form" class="main flex flex-col gap-8 ml-24 mr-4 pt-20">
+    <div class="bg-[#F1FFF5] rounded-xl p-4 pb-16 relative">
         <h1 class="font-bold">Thiết lập tự xử lí</h1>
         <div class="grid grid-cols-3 text-center gap-4">
             <p></p>
@@ -25,13 +25,13 @@
             <p>Mức ánh sáng tự xử lí (lux)</p>
             <div class="flex justify-center items-center">
                 <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
-                    name="minBrightness">
+                    name="minLux">
             </div>
             <div class="flex justify-center items-center">
                 <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
-                    name="maxBrightness">
+                    name="maxLux">
             </div>
-            <p>Mực nước tự xử lí (m)</p>
+            <p>Mực nước tự xử lí (%)</p>
             <div class="flex justify-center items-center">
                 <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10" name="minHeight">
             </div>
@@ -39,11 +39,12 @@
                 <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10" name="maxHeight">
             </div>
         </div>
-        <button class="bg-[#05751B] rounded-full px-8 py-1 text-white font-medium absolute bottom-4 right-4">Thiết
+        <button type="button"
+            class="button bg-[#05751B] rounded-full px-8 py-1 text-white font-medium absolute bottom-4 right-4">Thiết
             lập</button>
-    </form>
+    </div>
 
-    <form id="form2" class="bg-[#F1FFF5] rounded-xl p-4 pb-16 relative">
+    <div class="bg-[#F1FFF5] rounded-xl p-4 pb-16 relative">
         <h1 class="font-bold">Thiết lập thiết bị hoạt động</h1>
         <div class="flex flex-col gap-4 p-2">
             <div class="flex">
@@ -51,7 +52,7 @@
                     <p class="basis-1/2 text-center">Thời gian mỗi lần bật máy sưởi</p>
                     <div class="basis-1/2 flex justify-center items-center gap-2">
                         <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
-                            name="heaterDuration">
+                            name="heatDuration">
                         <p>(phút)</p>
                     </div>
                 </div>
@@ -59,7 +60,7 @@
                     <p class="basis-1/2 text-center">Thời điểm tưới nước mỗi ngày</p>
                     <div class="basis-1/2 flex justify-center items-center gap-2 px-3">
                         <input type="time" class="rounded-full bg-[#c1e6c4] px-2 text-center w-full"
-                            name="wateringTime">
+                            name="waterTime">
                     </div>
                 </div>
             </div>
@@ -68,7 +69,7 @@
                     <p class="basis-1/2 text-center">Thời gian mỗi lần tưới nước</p>
                     <div class="basis-1/2 flex justify-center items-center gap-2">
                         <input type="text" class="rounded-full bg-[#c1e6c4] px-2 text-center" placeholder="10"
-                            name="wateringDuration">
+                            name="waterDuration">
                         <p>(phút)</p>
                     </div>
                 </div>
@@ -95,8 +96,72 @@
                 </div>
             </div>
         </div>
-        <button class="bg-[#05751B] rounded-full px-8 py-1 text-white font-medium absolute bottom-4 right-4">Thiết
+        <button type="button"
+            class="button bg-[#05751B] rounded-full px-8 py-1 text-white font-medium absolute bottom-4 right-4">Thiết
             lập</button>
-    </form>
+    </div>
 
-</div>
+</form>
+
+<script>
+    // Kết nối đến HiveMQ WebSocket broker
+    const client = mqtt.connect('wss://66e7cd73955d41119db073a43925b11b.s1.eu.hivemq.cloud:8884/mqtt', {
+        username: 'smart-garden-web',
+        password: 'Username2',
+        clientId: 'smart-garden-web-client',
+    });
+
+    // Khi kết nối thành công
+    client.on('connect', () => {
+        console.log('Connected to HiveMQ');
+    });
+
+    // Publish
+    function publish(topic, message) {
+        client.publish(topic, message, { qos: 2 }, (error) => {
+            if (error) {
+                console.error('MQTT Publish:', error);
+            }
+        });
+    }
+
+    document.querySelectorAll('button').forEach((button) => {
+        button.addEventListener('click', () => {
+            const form = document.getElementById('form');
+            const formData = new FormData(form);
+            const data = {};
+            for (const [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            console.log(data);
+            localStorage.setItem('smart-garden-settings', JSON.stringify(data));
+            publish('smart-garden-web/settings', JSON.stringify(data));
+        });
+    });
+
+    // Load settings from localStorage on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedData = localStorage.getItem('smart-garden-settings');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const input = document.querySelector(`input[name="${key}"]`);
+                    if (input) {
+                        input.value = data[key];
+                    }
+                }
+            }
+        }
+    });
+
+    // Khi xảy ra lỗi
+    client.on('error', (error) => {
+        console.error('MQTT Error:', error);
+    });
+
+    /*document.querySelector('input[name="minLux"]').addEventListener('input', (event) => {
+        document.querySelector('input[name="maxLux"]').value = event.target.value;
+    });*/
+
+</script>
