@@ -11,8 +11,13 @@ background-size: cover; background-position: center;">
             <input type="text" class="form-control rounded-2xl p-3 outline-none bg-[#f5f5f5]" name="username"
                 placeholder="Tài khoản" required>
 
-            <input type="password" class="form-control rounded-2xl p-3 outline-none bg-[#f5f5f5]" name="password"
+            <input type="password" class="form-control rounded-2xl p-3 outline-none bg-[#f5f5f5]" name="password" id="password"
                 placeholder="Mật khẩu" required>
+
+            <p class="error text-center text-red-600 font-medium">{{error}}</p>
+
+            <i class="fa-solid fa-eye absolute top-40 right-8 cursor-pointer hidden"></i>
+            <i class="fa-solid fa-eye-slash absolute top-40 right-8 cursor-pointer"></i>
 
             <button id="signup-button" type="submit"
                 class="bg-[#033a35] text-white text-opacity-40 font-medium rounded-2xl p-4 w-full">
@@ -26,6 +31,7 @@ background-size: cover; background-position: center;">
     <script>
         document.querySelectorAll('.form-control').forEach(input => {
             input.addEventListener('focus', () => {
+                document.querySelector('.error').classList.add('hidden');
                 input.classList.add('border', 'border-black');
             });
             input.addEventListener('blur', () => {
@@ -37,11 +43,23 @@ background-size: cover; background-position: center;">
             input.addEventListener('input', () => {
                 const allFilled = Array.from(document.querySelectorAll('.form-control')).every(input => input.value);
                 if (allFilled) {
-                    document.getElementById('login-button').classList.remove('text-opacity-40');
+                    document.getElementById('signup-button').classList.remove('text-opacity-40');
                 } else {
-                    document.getElementById('login-button').classList.add('text-opacity-40');
+                    document.getElementById('signup-button').classList.add('text-opacity-40');
                 }
             });
+        });
+
+        document.querySelector('.fa-eye-slash').addEventListener('click', () => {
+            document.querySelector('.fa-eye-slash').classList.add('hidden');
+            document.querySelector('.fa-eye').classList.remove('hidden');
+            document.getElementById('password').type = 'text';
+        });
+
+        document.querySelector('.fa-eye').addEventListener('click', () => {
+            document.querySelector('.fa-eye').classList.add('hidden');
+            document.querySelector('.fa-eye-slash').classList.remove('hidden');
+            document.getElementById('password').type = 'password';
         });
     </script>
 </body>

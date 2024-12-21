@@ -17,6 +17,8 @@ function route(app) {
     app.get('/signup', userController.renderSignup);
     app.post('/login', userController.login);
     app.post('/signup', userController.signup);
+    app.get('/logout', userController.logout);
+    app.post('/update-sensors', dashboardController.updateSensors);
 }
 
 module.exports = route;

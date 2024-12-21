@@ -4,19 +4,19 @@
 <div id="messages" class="ml-20"></div>
 <div class="main flex flex-col gap-4 ml-24 mr-4 pt-20">
     <div class="data-boxes flex justify-between">
-        <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
+        <div class="temp data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
             <p class="text-xl">Nhiệt độ</p>
             <p id="temperature" class="font-bold text-4xl text-center"></p>
         </div>
-        <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
+        <div class="humid data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
             <p class="text-xl">Độ ẩm</p>
             <p id="humidity" class="font-bold text-4xl text-center"></p>
         </div>
-        <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
+        <div class="brightness data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
             <p class="text-xl">Ánh sáng</p>
             <p id="brightness" class="font-bold text-4xl text-center"></p>
         </div>
-        <div class="data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
+        <div class="water-level data-box p-4 bg-[#F1FFF5] rounded-3xl flex flex-col gap-2 justify-center items-center w-1/5 h-40">
             <p class="text-xl">Mực nước</p>
             <p id="waterLevel" class="font-bold text-4xl text-center"></p>
         </div>
@@ -194,28 +194,80 @@
         });
     });
 
+    let isAlerted = false;
+
     // Khi nhận được tin nhắn từ broker
     client.on('message', (topic, message) => {
         console.log("Received message on topic:", topic);
-        if (topic === 'smart-garden/temperature') {
-            const temperature = message.toString(); // Chuyển đổi message sang string
-            console.log("Temperature:", temperature); // Xem giá trị nhận được
-            document.getElementById('temperature').innerText = temperature + "°C"; // Hiển thị nhiệt độ
-        }
-        if (topic === 'smart-garden/humidity') {
-            const humidity = message.toString(); // Chuyển đổi message sang string
-            console.log("Humidity:", humidity); // Xem giá trị nhận được
-            document.getElementById('humidity').innerText = humidity + "%"; // Hiển thị độ ẩm
-        }
-        if (topic === 'smart-garden/brightness') {
-            const brightness = message.toString(); // Chuyển đổi message sang string
-            console.log("Brightness:", brightness); // Xem giá trị nhận được
-            document.getElementById('brightness').innerText = brightness + " lux"; // Hiển thị ánh sáng
-        }
-        if (topic === 'smart-garden/water-level') {
-            const waterLevel = message.toString(); // Chuyển đổi message sang string
-            console.log("Water Level:", waterLevel); // Xem giá trị nhận được
-            document.getElementById('waterLevel').innerText = waterLevel + " m"; // Hiển thị mực nước
+        if (topic === 'smart-garden/data') {
+            const data = JSON.parse(message.toString()); // Chuyển đổi message sang JSON
+            console.log("Received data:", data); // Xem giá trị nhận được
+
+            if (data.temperature !== undefined) {
+                document.getElementById('temperature').innerText = data.temperature + " °C"; // Hiển thị nhiệt độ
+            }
+            if (data.humidity !== undefined) {
+                document.getElementById('humidity').innerText = data.humidity + " %"; // Hiển thị độ ẩm
+            }
+            if (data.brightness !== undefined) {
+                document.getElementById('brightness').innerText = data.brightness + " lux"; // Hiển thị ánh sáng
+            }
+            if (data.waterLevel !== undefined) {
+                document.getElementById('waterLevel').innerText = data.waterLevel + " m"; // Hiển thị mực nước
+            }
+
+            // Kiểm tra thông số nào vượt ngưỡng so với các ngưỡng trong localStorage
+            const savedData = localStorage.getItem('smart-garden-settings');
+            if (savedData) {
+                const settings = JSON.parse(savedData);
+                if (data.temperature >= settings.maxTemp || data.temperature <= settings.minTemp) {
+                    if (isAlerted == false) {
+                        alert('Nhiệt độ vượt ngưỡng!');
+                        document.querySelector('.temp').classList.remove('bg-[#F1FFF5]');
+                        document.querySelector('.temp').classList.add('bg-[#FFEBEB]');
+                        updateSensorData();
+                        isAlerted = true;
+                    }
+                }
+                else if (data.humidity >= settings.maxHumid || data.humidity <= settings.minHumid) {
+                    if (isAlerted == false) {
+                        alert('Độ ẩm vượt ngưỡng!');
+                        document.querySelector('.humid').classList.remove('bg-[#F1FFF5]');
+                        document.querySelector('.humid').classList.add('bg-[#FFEBEB]');
+                        updateSensorData();
+                        isAlerted = true;
+                    }
+                }
+                else if (data.brightness >= settings.maxLux || data.brightness <= settings.minLux) {
+                    if (isAlerted == false) {
+                        alert('Ánh sáng vượt ngưỡng!');
+                        document.querySelector('.brightness').classList.remove('bg-[#F1FFF5]');
+                        document.querySelector('.brightness').classList.add('bg-[#FFEBEB]');
+                        updateSensorData();
+                        isAlerted = true;
+                    }
+                }
+                else if (data.waterLevel <= settings.minHeight * settings.tankHeight / 100) {
+                    if (isAlerted == false) {
+                        alert('Mực nước thấp!');
+                        document.querySelector('.water-level').classList.remove('bg-[#F1FFF5]');
+                        document.querySelector('.water-level').classList.add('bg-[#FFEBEB]');
+                        updateSensorData();
+                        isAlerted = true;
+                    }
+                }
+                else {
+                    document.querySelector('.temp').classList.remove('bg-[#FFEBEB]');
+                    document.querySelector('.temp').classList.add('bg-[#F1FFF5]');
+                    document.querySelector('.humid').classList.remove('bg-[#FFEBEB]');
+                    document.querySelector('.humid').classList.add('bg-[#F1FFF5]');
+                    document.querySelector('.brightness').classList.remove('bg-[#FFEBEB]');
+                    document.querySelector('.brightness').classList.add('bg-[#F1FFF5]');
+                    document.querySelector('.water-level').classList.remove('bg-[#FFEBEB]');
+                    document.querySelector('.water-level').classList.add('bg-[#F1FFF5]');
+                    isAlerted = false;
+                }
+            }
         }
     });
 
@@ -223,4 +275,27 @@
     client.on('error', (error) => {
         console.error('MQTT Error:', error);
     });
+
+    async function updateSensorData() {
+        let temperature = document.getElementById('temperature').innerText.replace('°C', '');
+        let humidity = document.getElementById('humidity').innerText.replace('%', '');
+        let brightness = document.getElementById('brightness').innerText.replace('lux', '');
+        let waterLevel = document.getElementById('waterLevel').innerText.replace('m', '');
+        console.log("Updating sensors...");
+        await fetch('/update-sensors', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ temperature: temperature, humidity: humidity, brightness: brightness, waterLevel: waterLevel })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            });
+    }
+
+    setInterval(() => {
+        updateSensorData();
+    }, 30000);
 </script>

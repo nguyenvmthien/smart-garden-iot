@@ -26,19 +26,29 @@ controller.login = async (req, res) => {
         })
     }
     else {
+        res.cookie('username', result.username, { maxAge: 24 * 60 * 60 * 1000 });
         res.redirect('/dashboard');
     }
 };
 
-controller.signup = (req, res) => {
+controller.signup = async (req, res) => {
     const { email, username, password } = req.body;
-    const user = userModels.register(username, password, email);
-    if (user) {
-        res.redirect('/login');
+    const user = await userModels.register(username, password, email);
+    if (user.error) {
+        res.render('signup', {
+            title: 'Signup',
+            isSignup: true,
+            error: user.error,
+        })
     }
     else {
-        res.redirect('/signup');
+        res.redirect('/login');
     }
+};
+
+controller.logout = (req, res) => {
+    res.clearCookie('username');
+    res.redirect('/login');
 };
 
 module.exports = controller;

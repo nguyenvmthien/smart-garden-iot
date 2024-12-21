@@ -1,4 +1,3 @@
-const { json } = require('express');
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 
@@ -25,12 +24,31 @@ const UserModel = {
         }
     },
 
+    checkExist: async (username, email) => {
+        const query = 'SELECT * FROM users WHERE username = $1 OR email = $2';
+        try {
+            const result = await db.query(query, [username, email]);
+            if (result.rows.length === 0) {
+                return false;
+            }
+            return true;
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    },
+
     // Đăng ký người dùng mới
     register: async (username, password, email) => {
+        // Kiểm tra xem username đã tồn tại chưa
+        const isExist = await UserModel.checkExist(username, email);
+        if (isExist) {
+            return { error: 'Username or email already exists!' };
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10); // Mã hóa mật khẩu
         const query = `
       INSERT INTO users (username, password, email)
-      VALUES ($1, $2, $3) RETURNING id, username, email;
+      VALUES ($1, $2, $3) RETURNING username, email;
     `;
         try {
             const result = await db.query(query, [username, hashedPassword, email]);
