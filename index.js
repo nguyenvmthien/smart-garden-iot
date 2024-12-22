@@ -7,7 +7,16 @@ const path = require('path');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.engine('hbs', Hbs.engine({ extname: 'hbs' }));
+app.engine('hbs', Hbs.engine({
+    extname: 'hbs',
+    helpers: {
+        formatDate: (date) => {
+            const newDate = new Date(date);
+            newDate.setHours(newDate.getHours() + 7);
+            return newDate.toLocaleString('en-GB', { hour12: false });
+        },
+    }
+}));
 app.set('view engine', 'hbs');
 
 app.set('views', path.join(__dirname, 'views'));

@@ -4,7 +4,7 @@
 <div class="main flex flex-col gap-8 ml-24 mr-4 pt-4">
     <div class="search flex flex-col gap-2">
         <h1 class="text-xl font-bold">Truy xuất lịch sử</h1>
-        <form class="flex gap-4 items-center" action="">
+        <form class="flex gap-4 items-center" action="" id="form">
             <label class="font-medium text-sm" for="from">Từ ngày</label>
             <input type="date" class="border border-[#828282] px-2 rounded-lg" name="from">
             <label class="font-medium text-sm" for="to">Đến ngày</label>
@@ -20,167 +20,66 @@
             <button class="bg-[#05751B] rounded-full px-4 py-2 text-white font-medium">Xuất CSV</button>
         </div>
 
-        <div class="max-h-[350px] overflow-hidden">
-            <table class="table-fixed w-full max-h-full overflow-y-auto">
-                <thead>
-                    <tr>
-                        <th class="w-1/5 text-[#0E2A03] py-1">Thời điểm</th>
-                        <th class="w-1/5 text-[#0E2A03] py-1">Nhiệt độ (°C)</th>
-                        <th class="w-1/5 text-[#0E2A03] py-1">Độ ẩm (%)</th>
-                        <th class="w-1/5 text-[#0E2A03] py-1">Độ sáng (lux)</th>
-                        <th class="w-1/5 text-[#0E2A03] py-1">Mực nước (m)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 00:00</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 00:10</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 00:20</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 00:30</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 00:40</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 00:50</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 01:00</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 01:10</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 01:20</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 01:30</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 01:40</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 01:50</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 02:00</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 02:10</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 02:20</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 02:30</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 02:40</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 02:50</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 03:00</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 03:10</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                    <tr class="text-center border-t border-[#1E4B07]">
-                        <td class="py-1">11/11/2024 03:20</td>
-                        <td class="py-1">25.4</td>
-                        <td class="py-1">60</td>
-                        <td class="py-1">400</td>
-                        <td class="py-1">0.5</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="table-fixed w-full flex-col">
+            <div>
+                <div class="flex text-center w-full font-bold border-b border-[#828282]">
+                    <div class="w-1/5 text-[#0E2A03] py-1">Thời điểm</div>
+                    <div class="w-1/5 text-[#0E2A03] py-1">Nhiệt độ (°C)</div>
+                    <div class="w-1/5 text-[#0E2A03] py-1">Độ ẩm (%)</div>
+                    <div class="w-1/5 text-[#0E2A03] py-1">Độ sáng (lux)</div>
+                    <div class="w-1/5 text-[#0E2A03] py-1">Mực nước (m)</div>
+                </div>
+            </div>
+            <div id="data" class="max-h-[300px] overflow-y-auto block w-full" style="scrollbar-width: none;">
+                {{#each sensorData}}
+                <div class="flex border-b border-[#828282] text-center w-full">
+                    <div class="py-1 w-1/5">{{formatDate recorded_at}}</div>
+                    <div class="py-1 w-1/5">{{temperature}}</div>
+                    <div class="py-1 w-1/5">{{humidity}}</div>
+                    <div class="py-1 w-1/5">{{brightness}}</div>
+                    <div class="py-1 w-1/5">{{water_level}}</div>
+                </div>
+                {{/each}}
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const from = document.querySelector('input[name="from"]').value;
+        const to = document.querySelector('input[name="to"]').value;
+        await fetch(`/get-history?from=${from}&to=${to}`)
+            .then(res => res.json())
+            .then(data => {
+                const table = document.getElementById('data');
+                table.innerHTML = '';
+                data.forEach(sensor => {
+                    const row = document.createElement('div');
+                    row.classList.add('flex', 'border-b', 'border-[#828282]', 'text-center', 'w-full');
+                    row.innerHTML = `
+                        <div class="py-1 w-1/5">${formatDate(sensor.recorded_at)}</div>
+                        <div class="py-1 w-1/5">${sensor.temperature}</div>
+                        <div class="py-1 w-1/5">${sensor.humidity}</div>
+                        <div class="py-1 w-1/5">${sensor.brightness}</div>
+                        <div class="py-1 w-1/5">${sensor.water_level}</div>
+                    `;
+                    table.appendChild(row);
+                });
+            });
+    });
+
+    function formatDate(date) {
+        const d = new Date(date);
+        const offset = d.getTimezoneOffset();
+        d.setMinutes(d.getMinutes() - offset + 420);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        const hours = String(d.getHours()).padStart(2, '0');
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        const seconds = String(d.getSeconds()).padStart(2, '0');
+        return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
+    }
+</script>

@@ -13,24 +13,16 @@ controller.renderDashboard = (req, res) => {
 };
 
 controller.updateSensors = async (req, res) => {
-    const { temperature, humidity, brightness, waterLevel } = req.body;
-    const username = req.cookies.username;
-    await sensorModels.createSensorData(username, 'temperature', temperature)   
-        .catch(err => {
-            res.send('Error updating sensors: ' + err.message);
-        });
-    await sensorModels.createSensorData(username, 'humidity', humidity)
-        .catch(err => {
-            res.send('Error updating sensors: ' + err.message);
-        });
-    await sensorModels.createSensorData(username, 'brightness', brightness)
-        .catch(err => {
-            res.send('Error updating sensors: ' + err.message);
-        });
-    await sensorModels.createSensorData(username, 'water_level', waterLevel)
-        .catch(err => {
-            res.send('Error updating sensors: ' + err.message);
-        });
+    try {
+        const { temperature, humidity, brightness, waterLevel } = req.body;
+        const username = req.cookies.username;
+
+        await sensorModels.createSensorData(username, temperature, humidity, brightness, waterLevel);
+
+        res.json('Sensors updated successfully');
+    } catch (err) {
+        res.status(500).json('Error updating sensors: ' + err.message);
+    }
 }
 
 module.exports = controller;

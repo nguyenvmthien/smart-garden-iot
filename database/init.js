@@ -14,8 +14,10 @@ const createTables = async () => {
     CREATE TABLE IF NOT EXISTS sensor_data (
       id SERIAL PRIMARY KEY,
       username VARCHAR(50) NOT NULL,
-      sensor_type VARCHAR(50) NOT NULL,
-      sensor_value FLOAT NOT NULL,
+      temperature FLOAT NOT NULL,
+      humidity FLOAT NOT NULL,
+      brightness FLOAT NOT NULL,
+      water_level FLOAT NOT NULL,
       recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
     );

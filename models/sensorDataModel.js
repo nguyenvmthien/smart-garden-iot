@@ -13,8 +13,8 @@ const SensorDataModel = {
   },
 
   // Lấy dữ liệu cảm biến theo ID người dùng
-  getSensorDataByusername: async (username) => {
-    const query = 'SELECT * FROM sensor_data WHERE user_id = $1';
+  getSensorDataByUsername: async (username) => {
+    const query = 'SELECT DISTINCT temperature, humidity, brightness, water_level, recorded_at FROM sensor_data WHERE username = $1 ORDER BY recorded_at DESC';
     try {
       const result = await db.query(query, [username]);
       return result.rows;
@@ -23,42 +23,35 @@ const SensorDataModel = {
     }
   },
 
-  // Lấy dữ liệu cảm biến theo loại
-  getSensorDataByType: async (username, sensorType) => {
+  getSensorDataFromDateToDate: async (username, fromDate, toDate) => {
+    console.log(fromDate, toDate);
     const query = `
-      SELECT * FROM sensor_data 
-      WHERE user_id = $1 AND sensor_type = $2
-    `;
+      SELECT DISTINCT  recorded_at, temperature, humidity, brightness, water_level 
+      FROM sensor_data 
+      WHERE username = $1 
+        AND recorded_at >= $2 AND recorded_at <= $3 
+      ORDER BY recorded_at DESC
+      `;
     try {
-      const result = await db.query(query, [username, sensorType]);
+      const result = await db.query(query, [username, fromDate, toDate]);
+      console.log(result.rows);
       return result.rows;
     } catch (err) {
-      throw new Error('Error fetching sensor data by type: ' + err.message);
+      throw new Error('Error fetching sensor data for user: ' + err.message);
     }
   },
 
   // Thêm dữ liệu cảm biến mới
-  createSensorData: async (username, sensorType, sensorValue) => {
+  createSensorData: async (username, temperature, humidity, brightness, waterLevel) => {
     const query = `
-      INSERT INTO sensor_data (username, sensor_type, sensor_value)
-      VALUES ($1, $2, $3) RETURNING *;
+      INSERT INTO sensor_data (username, temperature, humidity, brightness, water_level)
+      VALUES ($1, $2, $3, $4, $5) RETURNING *;
     `;
     try {
-      const result = await db.query(query, [username, sensorType, sensorValue]);
+      const result = await db.query(query, [username, temperature, humidity, brightness, waterLevel]);
       return result.rows[0];
     } catch (err) {
       throw new Error('Error adding sensor data: ' + err.message);
-    }
-  },
-
-  // Xóa dữ liệu cảm biến theo ID
-  deleteSensorDataById: async (id) => {
-    const query = 'DELETE FROM sensor_data WHERE id = $1 RETURNING *';
-    try {
-      const result = await db.query(query, [id]);
-      return result.rows[0];
-    } catch (err) {
-      throw new Error('Error deleting sensor data: ' + err.message);
     }
   },
 };

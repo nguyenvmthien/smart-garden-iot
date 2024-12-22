@@ -19,6 +19,7 @@ function route(app) {
     app.post('/signup', userController.signup);
     app.get('/logout', userController.logout);
     app.post('/update-sensors', dashboardController.updateSensors);
+    app.get('/get-history', historyController.getHistoryFromDateToDate);
 }
 
 module.exports = route;
