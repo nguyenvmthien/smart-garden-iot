@@ -25,4 +25,15 @@ controller.updateSensors = async (req, res) => {
     }
 }
 
+// Một hàm lấy dữ liệu nhiệt độ trung bình của tuần gần nhất (mỗi ngày 1 dữ liệu)
+controller.getTemperatureData = async (req, res) => {
+    try {
+        const username = req.cookies.username;
+        const data = await sensorModels.getTemperatureData(username);
+        res.json(data);
+    } catch (err) {
+        res.status(500).json('Error getting temperature data: ' + err.message);
+    }
+}
+
 module.exports = controller;

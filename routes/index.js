@@ -20,6 +20,7 @@ function route(app) {
     app.get('/logout', userController.logout);
     app.post('/update-sensors', dashboardController.updateSensors);
     app.get('/get-history', historyController.getHistoryFromDateToDate);
+    app.post('/get-week-data', dashboardController.getTemperatureData);
 }
 
 module.exports = route;

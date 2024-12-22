@@ -30,28 +30,28 @@
         <div class="flex flex-col bg-[#F1FFF5] rounded-xl p-2">
             <div>
                 <i class="fa-solid fa-chart-line px-1" style="color: #63E6BE;"></i>
-                <span class="font-bold">Nhiệt độ tuần này</span>
+                <span class="font-bold">Nhiệt độ tuần trước (°C)</span>
             </div>
             <canvas class="" id="tempChart"></canvas>
         </div>
         <div class="flex flex-col bg-[#F1FFF5] rounded-xl p-2">
             <div>
                 <i class="fa-solid fa-chart-line px-1" style="color: #63E6BE;"></i>
-                <span class="font-bold">Độ ẩm tuần này</span>
+                <span class="font-bold">Độ ẩm tuần trước (%)</span>
             </div>
             <canvas class="" id="humidChart"></canvas>
         </div>
         <div class="flex flex-col bg-[#F1FFF5] rounded-xl p-2">
             <div>
                 <i class="fa-solid fa-chart-line px-1" style="color: #63E6BE;"></i>
-                <span class="font-bold">Ánh sáng tuần này</span>
+                <span class="font-bold">Ánh sáng tuần trước (lux)</span>
             </div>
             <canvas class="" id="lightChart"></canvas>
         </div>
         <div class="flex flex-col bg-[#F1FFF5] rounded-xl p-2">
             <div>
                 <i class="fa-solid fa-chart-line px-1" style="color: #63E6BE;"></i>
-                <span class="font-bold">Mực nước tuần này</span>
+                <span class="font-bold">Mực nước tuần trước (m)</span>
             </div>
             <canvas class="" id="waterChart"></canvas>
         </div>
@@ -59,13 +59,42 @@
 </div>
 
 <script>
+    let weekTemp = [];
+    let weekHumid = [];
+    let weekBrightness = [];
+    let weekWaterLevel = [];
+    document.addEventListener('DOMContentLoaded', async () => {
+        await fetch('/get-week-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            data.forEach(day => {
+                weekTemp.push(day.temperature);
+                weekHumid.push(day.humidity);
+                weekBrightness.push(day.brightness);
+                weekWaterLevel.push(day.water_level);
+            });
+            tempChart.data.datasets[0].data = weekTemp;
+            humidChart.data.datasets[0].data = weekHumid;
+            lightChart.data.datasets[0].data = weekBrightness;
+            waterChart.data.datasets[0].data = weekWaterLevel;
+            tempChart.update();
+            humidChart.update();
+            lightChart.update();
+            waterChart.update();
+        });
+    })
     const tempCtx = document.getElementById('tempChart').getContext('2d');
     const tempChart = new Chart(tempCtx, {
         type: 'line', // Loại biểu đồ
         data: {
             labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'], // Nhãn trục X
             datasets: [{
-                data: [20, 25, 60, 80, 40, 50, 30], // Dữ liệu nhiệt độ
                 borderColor: '#1F78B4', // Màu đường
                 borderWidth: 2, // Độ dày đường
                 tension: 0.4 // Độ cong của đường

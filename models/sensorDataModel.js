@@ -1,17 +1,6 @@
 const db = require('../config/db');
 
 const SensorDataModel = {
-  // Lấy tất cả dữ liệu cảm biến
-  getAllSensorData: async () => {
-    const query = 'SELECT * FROM sensor_data';
-    try {
-      const result = await db.query(query);
-      return result.rows;
-    } catch (err) {
-      throw new Error('Error fetching sensor data: ' + err.message);
-    }
-  },
-
   // Lấy dữ liệu cảm biến theo ID người dùng
   getSensorDataByUsername: async (username) => {
     const query = 'SELECT DISTINCT temperature, humidity, brightness, water_level, recorded_at FROM sensor_data WHERE username = $1 ORDER BY recorded_at DESC';
@@ -52,6 +41,24 @@ const SensorDataModel = {
       return result.rows[0];
     } catch (err) {
       throw new Error('Error adding sensor data: ' + err.message);
+    }
+  },
+
+  // Một hàm lấy dữ liệu các thông số trung bình của tuần gần nhất (mỗi ngày 1 dữ liệu)
+  getTemperatureData: async (username) => {
+    const query = `
+      SELECT DISTINCT date_trunc('day', recorded_at) as recorded_at, avg(temperature) as temperature, avg(humidity) as humidity, avg(brightness) as brightness, avg(water_level) as water_level
+      FROM sensor_data
+      WHERE username = $1
+      GROUP BY date_trunc('day', recorded_at)
+      ORDER BY recorded_at DESC
+      LIMIT 7;
+    `;
+    try {
+      const result = await db.query(query, [username]);
+      return result.rows;
+    } catch (err) {
+      throw new Error('Error fetching temperature data: ' + err.message);
     }
   },
 };
