@@ -64,30 +64,31 @@
     let weekBrightness = [];
     let weekWaterLevel = [];
     document.addEventListener('DOMContentLoaded', async () => {
+        // sendEmail('Smart Garden', 'Welcome to Smart Garden!');
         await fetch('/get-week-data', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            data.forEach(day => {
-                weekTemp.push(day.temperature);
-                weekHumid.push(day.humidity);
-                weekBrightness.push(day.brightness);
-                weekWaterLevel.push(day.water_level);
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                data.forEach(day => {
+                    weekTemp.push(day.temperature);
+                    weekHumid.push(day.humidity);
+                    weekBrightness.push(day.brightness);
+                    weekWaterLevel.push(day.water_level);
+                });
+                tempChart.data.datasets[0].data = weekTemp;
+                humidChart.data.datasets[0].data = weekHumid;
+                lightChart.data.datasets[0].data = weekBrightness;
+                waterChart.data.datasets[0].data = weekWaterLevel;
+                tempChart.update();
+                humidChart.update();
+                lightChart.update();
+                waterChart.update();
             });
-            tempChart.data.datasets[0].data = weekTemp;
-            humidChart.data.datasets[0].data = weekHumid;
-            lightChart.data.datasets[0].data = weekBrightness;
-            waterChart.data.datasets[0].data = weekWaterLevel;
-            tempChart.update();
-            humidChart.update();
-            lightChart.update();
-            waterChart.update();
-        });
     })
     const tempCtx = document.getElementById('tempChart').getContext('2d');
     const tempChart = new Chart(tempCtx, {
@@ -208,6 +209,30 @@
         }
     });
 
+    // Gửi email
+    const email = '{{email}}';
+    async function sendEmail(subject, message) {
+        await fetch('/send-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                to: email,
+                subject,
+                text: message
+            }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Failed to send email');
+                } else {
+                    console.log('Email sent successfully');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
     // Kết nối đến HiveMQ WebSocket broker
     const client = mqtt.connect('wss://66e7cd73955d41119db073a43925b11b.s1.eu.hivemq.cloud:8884/mqtt', {
         username: 'smart-garden-web',
@@ -227,6 +252,10 @@
         });
     });
 
+    let temperatureSent = false;
+    let humiditySent = false;
+    let brightnessSent = false;
+    let waterLevelSent = false;
     // Khi nhận được tin nhắn từ broker
     client.on('message', (topic, message) => {
         console.log("Received message on topic:", topic);
@@ -255,37 +284,69 @@
                     document.querySelector('.temp').classList.remove('bg-[#F1FFF5]');
                     document.querySelector('.temp').classList.add('bg-[#FFEBEB]');
                     updateSensorData();
+                    if (!temperatureSent) {
+                        sendEmail(
+                            'Cảnh báo nhiệt độ',
+                            `Nhiệt độ hiện tại là ${data.temperature}°C, đã vượt ngưỡng (${settings.minTemp}°C - ${settings.maxTemp}°C).`
+                        );
+                        temperatureSent = true;
+                    }
                 }
                 else {
                     document.querySelector('.temp').classList.remove('bg-[#FFEBEB]');
                     document.querySelector('.temp').classList.add('bg-[#F1FFF5]');
+                    temperatureSent = false;
                 }
                 if (data.humidity >= settings.maxHumid || data.humidity <= settings.minHumid) {
                     document.querySelector('.humid').classList.remove('bg-[#F1FFF5]');
                     document.querySelector('.humid').classList.add('bg-[#FFEBEB]');
                     updateSensorData();
+                    if (!humiditySent) {
+                        sendEmail(
+                            'Cảnh báo độ ẩm',
+                            `Độ ẩm hiện tại là ${data.humidity}%, đã vượt ngưỡng (${settings.minHumid}% - ${settings.maxHumid}%).`
+                        );
+                        humiditySent = true;
+                    }
                 }
                 else {
                     document.querySelector('.humid').classList.remove('bg-[#FFEBEB]');
                     document.querySelector('.humid').classList.add('bg-[#F1FFF5]');
+                    humiditySent = false;
                 }
                 if (data.brightness >= settings.maxLux || data.brightness <= settings.minLux) {
                     document.querySelector('.brightness').classList.remove('bg-[#F1FFF5]');
                     document.querySelector('.brightness').classList.add('bg-[#FFEBEB]');
                     updateSensorData();
+                    if (!brightnessSent) {
+                        sendEmail(
+                            'Cảnh báo ánh sáng',
+                            `Ánh sáng hiện tại là ${data.brightness} lux, đã vượt ngưỡng (${settings.minLux} lux - ${settings.maxLux} lux).`
+                        );
+                        brightnessSent = true;
+                    }
                 }
                 else {
                     document.querySelector('.brightness').classList.remove('bg-[#FFEBEB]');
                     document.querySelector('.brightness').classList.add('bg-[#F1FFF5]');
+                    brightnessSent = false;
                 }
                 if (data.waterLevel <= settings.minHeight * settings.tankHeight / 100) {
                     document.querySelector('.water-level').classList.remove('bg-[#F1FFF5]');
                     document.querySelector('.water-level').classList.add('bg-[#FFEBEB]');
                     updateSensorData();
+                    if (!waterLevelSent) {
+                        sendEmail(
+                            'Cảnh báo mực nước',
+                            `Mực nước hiện tại là ${data.waterLevel} m, đã dưới ngưỡng (${settings.minHeight}%).`
+                        );
+                        waterLevelSent = true;
+                    }
                 }
                 else {
                     document.querySelector('.water-level').classList.remove('bg-[#FFEBEB]');
                     document.querySelector('.water-level').classList.add('bg-[#F1FFF5]');
+                    waterLevelSent = false;
                 }
             }
         }

@@ -1,5 +1,34 @@
 let controller = {};
 const sensorModels = require('../models/sensorDataModel');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: '04nhatminh@gmail.com',
+        pass: 'zsmo ybjw eioy puay'
+    }
+});
+
+controller.sendEmail = (req, res) => {
+    const { to, subject, text } = req.body;
+
+    const mailOptions = {
+        from: 'Smart Garden',
+        to,
+        subject,
+        text
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error sending email');
+        } else {
+            res.send('Email sent: ' + info.response);
+        }
+    });
+}
 
 controller.renderDashboard = (req, res) => {
     if(req.cookies.username === undefined) {
@@ -8,7 +37,8 @@ controller.renderDashboard = (req, res) => {
     res.render('dashboard', {
         title: 'Dashboard',
         isDashboard: true,
-        username: req.cookies.username
+        username: req.cookies.username,
+        email: req.cookies.email
     })
 };
 

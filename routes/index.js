@@ -21,6 +21,7 @@ function route(app) {
     app.post('/update-sensors', dashboardController.updateSensors);
     app.get('/get-history', historyController.getHistoryFromDateToDate);
     app.post('/get-week-data', dashboardController.getTemperatureData);
+    app.post('/send-email', dashboardController.sendEmail);
 }
 
 module.exports = route;

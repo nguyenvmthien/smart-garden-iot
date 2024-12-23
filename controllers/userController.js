@@ -27,6 +27,7 @@ controller.login = async (req, res) => {
     }
     else {
         res.cookie('username', result.username, { maxAge: 24 * 60 * 60 * 1000 });
+        res.cookie('email', result.email, { maxAge: 24 * 60 * 60 * 1000 });
         res.redirect('/dashboard');
     }
 };
