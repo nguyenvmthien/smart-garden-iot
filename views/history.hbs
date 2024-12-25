@@ -71,16 +71,9 @@
     });
 
     function formatDate(date) {
-        const d = new Date(date);
-        const offset = d.getTimezoneOffset();
-        d.setMinutes(d.getMinutes() - offset + 420);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        const hours = String(d.getHours()).padStart(2, '0');
-        const minutes = String(d.getMinutes()).padStart(2, '0');
-        const seconds = String(d.getSeconds()).padStart(2, '0');
-        return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
+        const newDate = new Date(date);
+        newDate.setHours(newDate.getHours() + 7);
+        return newDate.toLocaleString('en-GB', { hour12: false });
     }
 
     document.getElementById('csv-button').addEventListener('click', function () {
