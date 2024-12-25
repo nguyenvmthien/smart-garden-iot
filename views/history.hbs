@@ -17,12 +17,12 @@
     <div class="history flex flex-col gap-2">
         <div class="flex gap-4 items-center">
             <h1 class="text-2xl font-bold">Lịch sử cảm biến</h1>
-            <button class="bg-[#05751B] rounded-full px-4 py-2 text-white font-medium">Xuất CSV</button>
+            <button id="csv-button" class="bg-[#05751B] rounded-full px-4 py-2 text-white font-medium">Xuất CSV</button>
         </div>
 
         <div class="table-fixed w-full flex-col">
             <div>
-                <div class="flex text-center w-full font-bold border-b border-[#828282]">
+                <div class="header flex text-center w-full font-bold border-b border-[#828282]">
                     <div class="w-1/5 text-[#0E2A03] py-1">Thời điểm</div>
                     <div class="w-1/5 text-[#0E2A03] py-1">Nhiệt độ (°C)</div>
                     <div class="w-1/5 text-[#0E2A03] py-1">Độ ẩm (%)</div>
@@ -82,4 +82,27 @@
         const seconds = String(d.getSeconds()).padStart(2, '0');
         return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
     }
+
+    document.getElementById('csv-button').addEventListener('click', function () {
+        const data = document.getElementById('data');
+        let csvContent = 'data:text/csv;charset=utf-8,';
+
+        csvContent += 'Ngay,Gio,Nhiet do,Do am,Anh sang,Muc nuoc' + '\r\n';
+
+        const rows = Array.from(data.querySelectorAll('div'));
+        rows.forEach(row => {
+            const rowData = Array.from(row.querySelectorAll('div')).map(content => content.textContent);
+            if (rowData.some(cell => cell)) {
+                csvContent += rowData.join(',') + '\r\n';
+            }
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'sensors_history.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
 </script>
